@@ -14,6 +14,9 @@ import Tooltip from '@/app/components/base/tooltip'
 import { Markdown } from '@/app/components/base/markdown'
 import type { Emoji } from '@/types/tools'
 
+
+
+
 const OperationBtn = ({ innerContent, onClick, className }: { innerContent: React.ReactNode; onClick?: () => void; className?: string }) => (
   <div
     className={`relative box-border flex items-center justify-center h-7 w-7 p-0.5 rounded-lg bg-white cursor-pointer text-gray-500 hover:text-gray-800 ${className ?? ''}`}
@@ -166,17 +169,23 @@ const Answer: FC<IAnswerProps> = ({
 
   return (
     <div key={id}>
-      <div className='flex items-start'>
-        <div className={`${s.answerIcon} w-10 h-10 shrink-0`}>
+      <div className='flex w-full items-start justify-start border-b border-gray-200 py-8 px-32 bg-gray-100'>
+        <div className={`${s.answerIcon} `}>
+        <div className={`${s.answerIcon} w-10 h-10 shrink-0 `}></div>
           {isResponsing
             && <div className={s.typeingIcon}>
               <LoadingAnim type='avatar' />
+              
             </div>
           }
+          
         </div>
+        
         <div className={`${s.answerWrap}`}>
-          <div className={`${s.answer} relative text-sm text-gray-900`}>
-            <div className={'ml-2 py-3 px-4 bg-gray-100 rounded-tr-2xl rounded-b-2xl'}>
+          <div className={`${s.answer} `}>
+            
+            <div className={'pl-3 pt-2'}>
+              
               {(isResponsing && (isAgentMode ? (!content && (agent_thoughts || []).filter(item => !!item.thought || !!item.tool).length === 0) : !content))
                 ? (
                   <div className='flex items-center justify-center w-6 h-5'>
@@ -186,7 +195,10 @@ const Answer: FC<IAnswerProps> = ({
                 : (isAgentMode
                   ? agentModeAnswer
                   : (
-                    <Markdown content={content} />
+                    
+                      <Markdown content={content} />
+                    
+                    
                   ))}
             </div>
             <div className='absolute top-[-14px] right-[-14px] flex flex-row justify-end gap-1'>
