@@ -141,7 +141,7 @@ const Chat: FC<IChatProps> = ({
   return (
     <div className={cn(!feedbackDisabled && 'px-3.5', 'h-full')}>
       {/* Chat List */}
-      <div className="h-full space-y-[30px]">
+      <div className="h-full ">
         {chatList.map((item) => {
           if (item.isAnswer) {
             const isLast = item.id === chatList[chatList.length - 1].id
@@ -166,9 +166,9 @@ const Chat: FC<IChatProps> = ({
       </div>
       {
         !isHideSendInput && (
-          <div className={cn(!feedbackDisabled && '!left-3.5 !right-3.5', 'absolute z-10 bottom-0 left-0 right-0')}>
-            <div className='p-[5.5px] max-h-[150px] bg-white border-[1.5px] border-gray-200 rounded-xl overflow-y-auto'>
-              {
+          <div className={cn(!feedbackDisabled && '!left-3.5 !right-3.5', 'absolute z-10 bottom-0 flex justify-center')}>
+            <div className='p-[5.5px] w-[80%]  max-h-[150px] bg-gray-100 border-[1.5px] border-gray-200 rounded-xl overflow-y-auto '>
+              {/* {
                 visionConfig?.enabled && (
                   <>
                     <div className='absolute bottom-2 left-2 flex items-center'>
@@ -190,19 +190,24 @@ const Chat: FC<IChatProps> = ({
                     </div>
                   </>
                 )
-              }
+              } */}
               <Textarea
                 className={`
-                  block w-full px-2 pr-[118px] py-[7px] leading-5 max-h-none text-sm text-gray-700 outline-none appearance-none resize-none
+                  block w-full px-2 pr-[118px] py-[7px] leading-5 max-h-none text-sm text-black bg-gray-100 outline-none appearance-none resize-none
                   ${visionConfig?.enabled && 'pl-12'}
                 `}
+                placeholder='Send a message'
                 value={query}
                 onChange={handleContentChange}
                 onKeyUp={handleKeyUp}
                 onKeyDown={handleKeyDown}
                 autoSize
-              />
-              <div className="absolute bottom-2 right-2 flex items-center h-8">
+              >
+              </Textarea>
+              
+              
+            </div>
+            <div className=" bottom-2 right-2 flex items-center h-10">
                 <div className={`${s.count} mr-4 h-5 leading-5 text-sm bg-gray-50 text-gray-500`}>{query.trim().length}</div>
                 <Tooltip
                   selector='send-tip'
@@ -216,7 +221,6 @@ const Chat: FC<IChatProps> = ({
                   <div className={`${s.sendBtn} w-8 h-8 cursor-pointer rounded-md`} onClick={handleSend}></div>
                 </Tooltip>
               </div>
-            </div>
           </div>
         )
       }
