@@ -43,6 +43,7 @@ export type IChatProps = {
   isResponsing?: boolean
   controlClearQuery?: number
   visionConfig?: VisionSettings
+  
 }
 
 export type IChatItem = {
@@ -164,7 +165,7 @@ const Chat: FC<IChatProps> = ({
       
       
       {/* Chat List */}
-      <div className="h-full ">
+      <div className="h-full pt-[4em]">
         {chatList.map((item) => {
           if (item.isAnswer) {
             const isLast = item.id === chatList[chatList.length - 1].id

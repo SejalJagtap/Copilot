@@ -80,7 +80,24 @@ const Main: FC = () => {
 
   const [conversationIdChangeBecauseOfNew, setConversationIdChangeBecauseOfNew, getConversationIdChangeBecauseOfNew] = useGetState(false)
   const [isChatStarted, { setTrue: setChatStarted, setFalse: setChatNotStarted }] = useBoolean(false)
+  const handleConversationIdChange = (id: string) => {
+    if (id === '-1') {
+      createNewChat()
+      setConversationIdChangeBecauseOfNew(true)
+      
+      setChatStarted()
+      // parse variables in introduction
+      setChatList(generateNewChatListWithOpenstatement(''))
+    }
+    else {
+      setConversationIdChangeBecauseOfNew(false)
+    }
+    // trigger handleConversationSwitch
+    setCurrConversationId(id, APP_ID)
+    hideSidebar()
+  }
   const handleStartChat = (inputs: Record<string, any>) => {
+    
     createNewChat()
     setConversationIdChangeBecauseOfNew(true)
     setCurrInputs(inputs)
@@ -99,71 +116,76 @@ const Main: FC = () => {
   const conversationIntroduction = currConversationInfo?.introduction || ''
 
   const handleConversationSwitch = () => {
-    if (!inited)
-      return
-
+    if (!inited) {
+      return;
+    }
+  
     // update inputs of current conversation
-    let notSyncToStateIntroduction = ''
-    let notSyncToStateInputs: Record<string, any> | undefined | null = {}
+    let notSyncToStateIntroduction = '';
+    let notSyncToStateInputs: Record<string, any> | undefined | null = {};
     if (!isNewConversation) {
-      const item = conversationList.find(item => item.id === currConversationId)
-      notSyncToStateInputs = item?.inputs || {}
-      setCurrInputs(notSyncToStateInputs as any)
-      notSyncToStateIntroduction = item?.introduction || ''
+      const item = conversationList.find((item) => item.id === currConversationId);
+      notSyncToStateInputs = item?.inputs || {};
+      setCurrInputs(notSyncToStateInputs as any);
+      notSyncToStateIntroduction = item?.introduction || '';
       setExistConversationInfo({
         name: item?.name || '',
         introduction: notSyncToStateIntroduction,
-      })
+      });
+    } else {
+      notSyncToStateInputs = newConversationInputs;
+      setCurrInputs(notSyncToStateInputs);
     }
-    else {
-      notSyncToStateInputs = newConversationInputs
-      setCurrInputs(notSyncToStateInputs)
+  
+    // create a new chat if it's a new conversation and not started
+    if (isNewConversation && !isChatStarted) {
+      createNewChat();
     }
-
+  
     // update chat list of current conversation
     if (!isNewConversation && !conversationIdChangeBecauseOfNew && !isResponsing) {
       fetchChatList(currConversationId).then((res: any) => {
-        const { data } = res
-        const newChatList: IChatItem[] = generateNewChatListWithOpenstatement(notSyncToStateIntroduction, notSyncToStateInputs)
-
+        const { data } = res;
+        const newChatList: IChatItem[] = generateNewChatListWithOpenstatement(
+          notSyncToStateIntroduction,
+          notSyncToStateInputs
+        );
+  
         data.forEach((item: any) => {
           newChatList.push({
             id: `question-${item.id}`,
             content: item.query,
             isAnswer: false,
-            message_files: item.message_files?.filter((file: any) => file.belongs_to === 'user') || [],
-
-          })
+            message_files: item.message_files?.filter(
+              (file: any) => file.belongs_to === 'user'
+            ) || [],
+          });
           newChatList.push({
             id: item.id,
             content: item.answer,
-            agent_thoughts: addFileInfos(item.agent_thoughts ? sortAgentSorts(item.agent_thoughts) : item.agent_thoughts, item.message_files),
+            agent_thoughts: addFileInfos(
+              item.agent_thoughts ? sortAgentSorts(item.agent_thoughts) : item.agent_thoughts,
+              item.message_files
+            ),
             feedback: item.feedback,
             isAnswer: true,
-            message_files: item.message_files?.filter((file: any) => file.belongs_to === 'assistant') || [],
-          })
-        })
-        setChatList(newChatList)
-      })
+            message_files: item.message_files?.filter(
+              (file: any) => file.belongs_to === 'assistant'
+            ) || [],
+          });
+        });
+        setChatList(newChatList);
+      });
     }
-
-    if (isNewConversation && isChatStarted)
-      setChatList(generateNewChatListWithOpenstatement())
-  }
-  useEffect(handleConversationSwitch, [currConversationId, inited])
-
-  const handleConversationIdChange = (id: string) => {
-    if (id === '-1') {
-      createNewChat()
-      setConversationIdChangeBecauseOfNew(true)
+  
+    if (isNewConversation && isChatStarted) {
+      setChatList(generateNewChatListWithOpenstatement(''));
     }
-    else {
-      setConversationIdChangeBecauseOfNew(false)
-    }
-    // trigger handleConversationSwitch
-    setCurrConversationId(id, APP_ID)
-    hideSidebar()
-  }
+  };
+  
+  useEffect(handleConversationSwitch, [currConversationId, inited]);
+  
+  
 
   /*
   * chat info. chat is under conversation.
@@ -543,6 +565,13 @@ const Main: FC = () => {
     setChatList(newChatList)
     notify({ type: 'success', message: t('common.api.success') })
   }
+  const renderHeader = () => {
+    return (
+      <div className=' top-0 absolute left-0 right-0 flex items-center justify-between border-b border-gray-100 mobile:h-12 tablet:h-16 px-8 bg-white'>
+        <div className='text-gray-900'>{conversationName}</div>
+      </div>
+    )
+  }
 
   const renderSidebar = () => {
     if (!APP_ID || !APP_INFO || !promptConfig)
@@ -586,7 +615,8 @@ const Main: FC = () => {
         )}
         {/* main */}
         <div className='flex-grow flex flex-col h-[calc(100vh_-_3rem)] overflow-y-auto'>
-          <ConfigSence
+        
+          {/* <ConfigSence
             conversationName={conversationName}
             hasSetInputs={hasSetInputs}
             isPublicVersion={isShowPrompt}
@@ -596,12 +626,15 @@ const Main: FC = () => {
             canEidtInpus={canEditInpus}
             savedInputs={currInputs as Record<string, any>}
             onInputsChange={setCurrInputs}
-          ></ConfigSence>
+          ></ConfigSence> */}
 
           {
-            hasSetInputs && (
+            (<>
+              
               <div className='relative grow h-[200px] pc:w-full max-w-full mobile:w-full pb-[66px] mx-auto mb-3.5 overflow-hidden'>
+              
                 <div className='h-full overflow-y-auto' ref={chatListDomRef}>
+                {renderHeader()}
                   <Chat
                     chatList={chatList}
                     onSend={handleSend}
@@ -611,7 +644,8 @@ const Main: FC = () => {
                     visionConfig={visionConfig}
                   />
                 </div>
-              </div>)
+              </div>
+              </>)
           }
         </div>
       </div>

@@ -22,8 +22,8 @@ const Examples: FC<IExamplProps>=({
     // const [query, setQuery] = React.useState('')
     // const inputRef = useRef(null);
     return(
-        <div className='mx-auto pc:w-[794px] max-w-full mobile:w-full px-3.5'>
-        <div className="flex flex-col space-y-4 border-t border-gray-200 bg-gray-50 p-7 sm:p-10">
+        <div className='mx-auto h-full pc:w-[794px] max-w-full mobile:w-full px-3.5 my-auto'>
+        <div className="flex flex-col space-y-4 border-t border-gray-200 bg-gray-50 p-7 sm:p-10 ">
             {examples.map((example, i) => (
               <button
                 key={i}
