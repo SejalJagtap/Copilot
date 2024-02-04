@@ -78,24 +78,10 @@ const Chat: FC<IChatProps> = ({
   controlClearQuery,
   visionConfig,
 }) => {
-  const { getCurrConversationId, isNewConversation } = useConversation();
+  
 
-  const [showExamples, setShowExamples] = React.useState(() => {
-    if (isNewConversation) {
-      // If it's a new conversation, show examples
-      return true;
-    }
-    const storageKey = `${storageConversationIdKey}_${getCurrConversationId()}`; // Use conversation ID in the storage key
-    const storedState = localStorage.getItem(storageKey);
-    return storedState ? JSON.parse(storedState) : true;
-  });
+  
 
-  useEffect(() => {
-    if (!isNewConversation) {
-      const storageKey = `${storageConversationIdKey}_${getCurrConversationId()}`; // Use conversation ID in the storage key
-      localStorage.setItem(storageKey, JSON.stringify(showExamples));
-    }
-  }, [showExamples, getCurrConversationId]);
   
   const { t } = useTranslation()
   const { notify } = Toast
@@ -135,7 +121,7 @@ const Chat: FC<IChatProps> = ({
   } = useImageFiles()
 
   const handleSend = () => {
-    setShowExamples(false);
+    
     if (!valid() || (checkCanSend && !checkCanSend()))
       return
     onSend(query, files.filter(file => file.progress !== -1).map(fileItem => ({
@@ -171,6 +157,7 @@ const Chat: FC<IChatProps> = ({
   }
 
   const inputRef = useRef(null);
+  const { getCurrConversationId, isNewConversation, showExamples } = useConversation();
 
   return (
     <div className={cn(!feedbackDisabled && 'px-3.5', 'h-full')}>
@@ -199,9 +186,11 @@ const Chat: FC<IChatProps> = ({
             />
           )
         })}
-        {showExamples && isNewConversation &&(
-        <Examples examples={examples} setQuery={setQuery} inputRef={inputRef} />
+        
+        {(!chatList || chatList.length === 0) && (
+          <Examples setQuery={setQuery} inputRef={inputRef} />
         )}
+
       </div>
       
            
