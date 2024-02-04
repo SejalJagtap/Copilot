@@ -9,16 +9,9 @@ import type { AppInfo, PromptConfig } from '@/types/app'
 import Toast from '@/app/components/base/toast'
 import Select from '@/app/components/base/select'
 import { DEFAULT_VALUE_MAX_LEN } from '@/config'
-import Textarea from 'rc-textarea'
-import { useRef } from 'react';
 
 // regex to match the {{}} and replace it with a span
 const regex = /\{\{([^}]+)\}\}/g
-const examples = [
-  "Get me the top 5 stories on Hacker News in markdown table format. Use columns like title, link, score, and comments.",
-  "Summarize the comments in the top hacker news story.",
-  "What is the top story on Hacker News right now?",
-];
 
 export type IWelcomeProps = {
   conversationName: string
@@ -43,13 +36,6 @@ const Welcome: FC<IWelcomeProps> = ({
   savedInputs,
   onInputsChange,
 }) => {
-  const inputRef = useRef(null);
-  const setInput = (value) => {
-    // Check if the ref is not null before setting the value
-    if (inputRef.current) {
-      inputRef.current.value = value;
-    }
-  };
   const { t } = useTranslation()
   const hasVar = promptConfig.prompt_variables.length > 0
   const [isFold, setIsFold] = useState<boolean>(true)
@@ -160,9 +146,7 @@ const Welcome: FC<IWelcomeProps> = ({
     onStartChat(inputs)
   }
 
-  const renderNoVarPanel = (
-    
-  ) => {
+  const renderNoVarPanel = () => {
     if (isPublicVersion) {
       return (
         <div>
@@ -186,52 +170,14 @@ const Welcome: FC<IWelcomeProps> = ({
     }
     // private version
     return (
-      
-      <div
-        className=''
+      <TemplateVarPanel
+        isFold={false}
+        header={
+          <AppInfoComp siteInfo={siteInfo} />
+        }
       >
-              <div className="flex flex-col space-y-4 border-t border-gray-200 bg-gray-50 p-7 sm:p-10">
-                {examples.map((example, i) => (
-                  <button
-                    key={i}
-                    className="rounded-md border border-gray-200 bg-white px-5 py-3 text-left text-sm text-gray-500 transition-all duration-75 hover:border-black hover:text-gray-700 active:bg-gray-50"
-                    onClick={() => {
-                      setInput(example);
-                      inputRef.current?.focus();
-                    }}
-                  >
-                    {example}
-                  </button>
-                ))}
-              </div>
-              <div className=' mb-3'>
-              <Textarea
-                className="w-full bg-gray-100 pl-3 pt-5 rounded-md"                                   
-                placeholder='Send a message'
-                ref={inputRef}
-                // value={query}
-                // onChange={handleContentChange}
-                // onKeyUp={handleKeyUp}
-                // onKeyDown={handleKeyDown}
-                // autoSize
-              />
-              </div>
-              {/* <div className="absolute bottom-2 right-2 flex items-center h-8">
-                <div className=" mr-4 h-5 leading-5 text-sm bg-gray-50 text-gray-500"}></div>
-                <Tooltip
-                  selector='send-tip'
-                  htmlContent={
-                    <div>
-                      <div>{t('common.operation.send')} Enter</div>
-                      <div>{t('common.operation.lineBreak')} Shift Enter</div>
-                    </div>
-                  }
-                > */}
-                  {/* <div className={`${s.sendBtn} w-8 h-8 cursor-pointer rounded-md`} onClick={handleSend}></div> */}
-                {/* </Tooltip> */}
-              {/* </div> */}
         <ChatBtn onClick={handleChat} />
-      </div>
+      </TemplateVarPanel>
     )
   }
 
@@ -385,7 +331,10 @@ const Welcome: FC<IWelcomeProps> = ({
               </div>
               : <div>
               </div>}
-            
+            <a className='flex items-center pr-3 space-x-3' href="https://dify.ai/" target="_blank">
+              <span className='uppercase'>{"sejal"}</span>
+              
+            </a>
           </div>
         )}
       </div>

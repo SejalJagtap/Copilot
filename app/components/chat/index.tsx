@@ -15,6 +15,16 @@ import Toast from '@/app/components/base/toast'
 import ChatImageUploader from '@/app/components/base/image-uploader/chat-image-uploader'
 import ImageList from '@/app/components/base/image-uploader/image-list'
 import { useImageFiles } from '@/app/components/base/image-uploader/hooks'
+import Examples from './examples'
+import useConversation from '@/hooks/use-conversation'
+
+const examples = [
+  "Get me the top 5 stories on Hacker News in markdown table format. Use columns like title, link, score, and comments.",
+  "Summarize the comments in the top hacker news story.",
+  "What is the top story on Hacker News right now?",
+];
+
+
 
 export type IChatProps = {
   chatList: IChatItem[]
@@ -68,6 +78,25 @@ const Chat: FC<IChatProps> = ({
   controlClearQuery,
   visionConfig,
 }) => {
+  const { getCurrConversationId, isNewConversation } = useConversation();
+
+  const [showExamples, setShowExamples] = React.useState(() => {
+    if (isNewConversation) {
+      // If it's a new conversation, show examples
+      return true;
+    }
+    const storageKey = `${storageConversationIdKey}_${getCurrConversationId()}`; // Use conversation ID in the storage key
+    const storedState = localStorage.getItem(storageKey);
+    return storedState ? JSON.parse(storedState) : true;
+  });
+
+  useEffect(() => {
+    if (!isNewConversation) {
+      const storageKey = `${storageConversationIdKey}_${getCurrConversationId()}`; // Use conversation ID in the storage key
+      localStorage.setItem(storageKey, JSON.stringify(showExamples));
+    }
+  }, [showExamples, getCurrConversationId]);
+  
   const { t } = useTranslation()
   const { notify } = Toast
   const isUseInputMethod = useRef(false)
@@ -91,6 +120,7 @@ const Chat: FC<IChatProps> = ({
   }
 
   useEffect(() => {
+    
     if (controlClearQuery)
       setQuery('')
   }, [controlClearQuery])
@@ -105,6 +135,7 @@ const Chat: FC<IChatProps> = ({
   } = useImageFiles()
 
   const handleSend = () => {
+    setShowExamples(false);
     if (!valid() || (checkCanSend && !checkCanSend()))
       return
     onSend(query, files.filter(file => file.progress !== -1).map(fileItem => ({
@@ -119,6 +150,7 @@ const Chat: FC<IChatProps> = ({
       if (!isResponsing)
         setQuery('')
     }
+    
   }
 
   const handleKeyUp = (e: any) => {
@@ -138,8 +170,12 @@ const Chat: FC<IChatProps> = ({
     }
   }
 
+  const inputRef = useRef(null);
+
   return (
     <div className={cn(!feedbackDisabled && 'px-3.5', 'h-full')}>
+      
+      
       {/* Chat List */}
       <div className="h-full ">
         {chatList.map((item) => {
@@ -163,7 +199,13 @@ const Chat: FC<IChatProps> = ({
             />
           )
         })}
+        {showExamples && isNewConversation &&(
+        <Examples examples={examples} setQuery={setQuery} inputRef={inputRef} />
+        )}
       </div>
+      
+           
+
       {
         !isHideSendInput && (
           <div className={cn(!feedbackDisabled && '!left-3.5 !right-3.5', 'absolute z-10 bottom-0 flex justify-center')}>
