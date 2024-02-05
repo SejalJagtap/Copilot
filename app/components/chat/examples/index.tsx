@@ -22,8 +22,8 @@ const Examples: FC<IExamplProps>=({
     // const [query, setQuery] = React.useState('')
     // const inputRef = useRef(null);
     return(
-      <div className='mx-auto h-full pc:w-[794px] max-w-full mobile:w-full px-3.5 '>
-        <div className="absolute border-gray-200sm:mx-0 mx-5 mt-20 max-w-screen-md rounded-md border sm:w-full">
+      <div className='mx-auto  h-full pc:w-[794px] max-w-full mobile:w-full px-3.5 '>
+        <div className="lg:absolute sm:overflow-auto border-gray-200sm:mx-0 mx-5 mt-20 max-w-screen-md rounded-md border sm:w-full">
           <div className="flex flex-col space-y-4 p-7 sm:p-10">
             <h1 className="text-lg font-semibold text-black">
               Welcome to ChatHN!

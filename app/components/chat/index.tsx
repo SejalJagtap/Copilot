@@ -225,7 +225,7 @@ const Chat: FC<IChatProps> = ({
               } */}
               <Textarea
                 className={` 
-                  block w-full px-2 pr-[118px] py-[7px] leading-5 max-h-none text-sm text-black bg-gray-100 outline-none appearance-none resize-none
+                  block w-full px-2  py-[7px] leading-5 max-h-none text-sm text-black bg-gray-100 outline-none appearance-none resize-none
                   ${visionConfig?.enabled && 'pl-12'}
                 `}
                 placeholder='Send a message'
