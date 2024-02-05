@@ -198,7 +198,7 @@ const Chat: FC<IChatProps> = ({
 
       {
         !isHideSendInput && (
-          <div className={cn(!feedbackDisabled && '!left-3.5 !right-3.5', 'absolute z-10 bottom-0 flex justify-center')}>
+          <div className={cn(!feedbackDisabled && '!left-3.5 !right-3.5', 'absolute z-10 bottom-0 flex justify-center px-4')}>
             <div className='p-[5.5px] w-[80%]  max-h-[150px] bg-gray-100 border-[1.5px] border-gray-200 rounded-xl overflow-y-auto '>
               {/* {
                 visionConfig?.enabled && (
@@ -224,7 +224,7 @@ const Chat: FC<IChatProps> = ({
                 )
               } */}
               <Textarea
-                className={`
+                className={` 
                   block w-full px-2 pr-[118px] py-[7px] leading-5 max-h-none text-sm text-black bg-gray-100 outline-none appearance-none resize-none
                   ${visionConfig?.enabled && 'pl-12'}
                 `}
