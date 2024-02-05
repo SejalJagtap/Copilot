@@ -2,9 +2,9 @@
 import type { FC } from 'react'
 import React, { useRef } from 'react'
 const examples = [
-    "Get me the top 5 stories on Hacker News in markdown table format. Use columns like title, link, score, and comments.",
-    "Summarize the comments in the top hacker news story.",
-    "What is the top story on Hacker News right now?",
+    "What is GenAi?",
+    "What are different data stuctures?",
+    "Roadmap for webdevelopment?",
 ];
 // const [showExamples, setShowExamples] = React.useState(true);
 export type IExamplProps={
@@ -23,7 +23,7 @@ const Examples: FC<IExamplProps>=({
     // const inputRef = useRef(null);
     return(
       <div className='mx-auto h-full pc:w-[794px] max-w-full mobile:w-full px-3.5 '>
-        <div className=" border-gray-200sm:mx-0 mx-5 mt-20 max-w-screen-md rounded-md border sm:w-full">
+        <div className="absolute border-gray-200sm:mx-0 mx-5 mt-20 max-w-screen-md rounded-md border sm:w-full">
           <div className="flex flex-col space-y-4 p-7 sm:p-10">
             <h1 className="text-lg font-semibold text-black">
               Welcome to ChatHN!
