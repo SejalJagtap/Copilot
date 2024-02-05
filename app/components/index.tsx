@@ -567,7 +567,7 @@ const Main: FC = () => {
   }
   const renderHeader = () => {
     return (
-      <div className=' top-0 absolute left-0 right-0 flex items-center justify-between border-b border-gray-100 mobile:h-12 tablet:h-16 px-8 bg-white'>
+      <div className=' top-0 absolute left-0 right-0 flex items-center justify-between border-b border-gray-100 mobile:h-12 tablet:h-16 px-8 bg-white '>
         <div className='text-gray-900'>{conversationName}</div>
       </div>
     )
